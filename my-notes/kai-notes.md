@@ -11,13 +11,15 @@
 
 更倒霉的是，越学习越焦虑。别人无法贩卖给你焦虑，是你自己焦虑 ——— 是你自己在为自己不断积累越来越多的焦虑......
 
-为什么呢？因为总也学不会、学不好。
+**为什么呢？因为总也学不会、学不好。**
 
-生活质量就是这样一点一点呗消磨掉的 ——— 最消耗生活质量的东西就是焦虑。
+生活质量就是这样一点一点被消磨掉的 ——— 最消耗生活质量的东西就是焦虑。
 
 **3. 自学是一门手艺**。
 
 手艺的特点是无需天分，孰能生巧。
+
+**自学是一门手艺，无它，唯手熟尔。**
 
 自学的一切技巧都是老生常谈，但是，在自学这件事上，重视一切老生常谈。
 
@@ -325,3 +327,111 @@
 Tasks:
 - 每一章总结
 - Part 2 总结：深入了解函数
+
+### 关于参数
+
+程序的核心构成是输入、处理、输出。从结构上看，每个函数都是一个完整的程序。
+
+虽然 Part 1 讲述过函数的部分内容，但是和本章的出发点不同：
+- Part 1 函数那一章，只是为了让读者有 “阅读” 函数说明文档的能力，核心是 “阅读”。
+- 本章，是为了让读者能够开始动手写函数给自己或者别人用，核心是 “写作”。
+
+**如何定义一个函数？**
+
+一个函数的基本结构如下：
+
+```python
+# 定义函数的关键词: def 
+# 函数名称: do_something
+# 参数列表: ()
+def do_something():
+    # 返回值
+    return "somthing"
+
+# 函数调用
+do_something()
+```
+
+**如何为函数取名？**
+
+- 名称不能以数字开头。可以以大小写字母或者下划线 `_` 开头;
+- 名称中不能有空格。要么使用下划线连接词汇，要么使用 [Camel Case](https://en.wikipedia.org/wiki/Camel_case) —— 推荐下划线。
+- 名称不能与关键字重合
+- 更多取名的最佳实践参考：
+    - [PEP 8 -- Style Guide for Python Code: Naming Conventions](https://www.python.org/dev/peps/pep-0008/#naming-conventions)
+    -  [PEP 526 -- Syntax for Variable Annotations](https://www.python.org/dev/peps/pep-0526/)
+```python
+# 查询关键词
+import keyword
+# 列出所有关键词 
+keyword.kwlist          
+# 查询某个词是不是关键词
+keyword.iskeyword('if')
+```
+
+**函数的参数列表**
+
+定义函数的时候，可以定义成不接收任何参数。
+
+```python
+def do_something():
+    print("do something")
+```
+
+也可以定义成接收一到多个参数。
+
+```python
+def add(a, b):
+    return a + b
+```
+
+**函数的返回值**
+
+函数可以通过 `return` 语句提供返回值；也可以没有 `return` 语句，此时返回值为 `None`。
+
+**变量的作用域**
+
+在程序执行过程中，变量有全局变量（Global Variables）和局部变量（Local Variables）之分。
+
+```python
+def increase_one(n):
+    n += 1
+    return n
+
+n = 1
+print(increase_one(n))
+# print(n)
+```
+全局变量会在全局生效，如上述代码中初始赋值为 1 的变量 `n`。
+
+某个函数被调用时，会为这个函数开辟一块新的区域，这个函数内部的所有变量，都是局部变量，如 `increase_one(n)` 中的 n。即使函数内部的某个变量名称与函数外部的某个变量名称相同，它们也不是同一个变量 —— 只是名称相同而已。
+
+当函数被调用的时候，传入函数的不是变量，而是变量的值。当 `increase_one(n)` 被调用的时候，外部的全局变量 `n` 的值传递给了函数内部的局部变量 `n`。
+
+局部变量的值的改变并不会影响全局变量的值。但是，当外部传递给函数的值是可变容器的时候，可变容器内部的值是可以被函数修改的，原因是因为全局变量和局部变量指向了同一个列表。
+
+```python
+def be_careful(a, b):
+    a = 2
+    b[0] = 'What?!'
+    print(id(b))
+
+a = 1
+b = [1, 2, 3]
+print(id(b))
+be_careful(a, b)
+a, b
+```
+
+如果想不改变列表的值，可以在函数内部对其操作之前，先创建一个它的拷贝：
+```python
+def be_careful(a, b):
+    a = 2
+    b_copy = b.copy()
+    b_copy[0] = 'What?!'
+
+a = 1
+b = [1, 2, 3]
+be_careful(a, b)
+a, b
+```
